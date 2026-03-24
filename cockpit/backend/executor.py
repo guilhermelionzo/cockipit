@@ -5,10 +5,35 @@ import os
 import re
 import time
 import uuid
+import tempfile
+import shutil
 from datetime import datetime
 from typing import Optional, Dict, Callable, List
 from .models import Routine, LogEntry
 from .storage import update_routine_status, append_log, load_routines, get_variables_dict
+
+
+# Full path to PowerShell on Windows (fallback chain)
+_PS_CANDIDATES = [
+    r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+    r"C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe",
+    "powershell.exe",
+    "powershell",
+    "pwsh.exe",
+    "pwsh",
+]
+
+
+def _find_powershell() -> str:
+    """Return the first PowerShell executable that exists on this machine."""
+    for candidate in _PS_CANDIDATES:
+        if os.path.isabs(candidate):
+            if os.path.isfile(candidate):
+                return candidate
+        else:
+            if shutil.which(candidate):
+                return candidate
+    return "powershell.exe"  # last-resort — will fail with a clear OS error
 
 
 # Global execution state
@@ -82,29 +107,141 @@ def substitute_variables(text: str, variables: Optional[dict] = None) -> str:
     return re.sub(r"\{(\w+)\}", replacer, text)
 
 
-def _build_command(routine: Routine, variables: dict) -> list:
-    """Build the shell command list from a routine definition."""
+def _write_vba_ps1(excel_path: str, macro_name: str) -> str:
+    """
+    Write a PowerShell script to a temp .ps1 file and return its path.
+
+    Using a .ps1 file (instead of inline -Command) avoids:
+      - Quoting/escaping issues with backslashes in UNC paths (\\server\\share\\file.xlsb)
+      - Command-line length limits
+      - Single-quote conflicts inside the inline -Command string
+
+    excel_path  – full UNC or local path to the .xlsm / .xlsb / .xls file
+    macro_name  – exact VBA Sub name (e.g. 'Module1.ExportPnL').
+                  Leave blank to only open → RefreshAll → save → close.
+    """
+    # Use raw string representation so backslashes survive the write to disk
+    safe_path = excel_path.replace('"', '`"')   # escape any literal " in the path
+
+    if macro_name.strip():
+        script_body = f"""\
+$ErrorActionPreference = 'Stop'
+$excel = New-Object -ComObject Excel.Application
+$excel.Visible = $false
+$excel.DisplayAlerts = $false
+try {{
+    Write-Output "Abrindo: {safe_path}"
+    $wb = $excel.Workbooks.Open("{safe_path}")
+    Write-Output "Executando macro: {macro_name.strip()}"
+    $excel.Run("{macro_name.strip()}")
+    $wb.Save()
+    Write-Output "Macro concluida com sucesso."
+}} catch {{
+    Write-Error "ERRO: $_"
+    exit 1
+}} finally {{
+    if ($wb)    {{ $wb.Close($false) }}
+    if ($excel) {{ $excel.Quit() }}
+    [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null
+}}
+"""
+    else:
+        script_body = f"""\
+$ErrorActionPreference = 'Stop'
+$excel = New-Object -ComObject Excel.Application
+$excel.Visible = $false
+$excel.DisplayAlerts = $false
+try {{
+    Write-Output "Abrindo: {safe_path}"
+    $wb = $excel.Workbooks.Open("{safe_path}")
+    Write-Output "Atualizando conexoes de dados..."
+    $wb.RefreshAll()
+    Start-Sleep -Seconds 5
+    $wb.Save()
+    Write-Output "Workbook atualizado com sucesso."
+}} catch {{
+    Write-Error "ERRO: $_"
+    exit 1
+}} finally {{
+    if ($wb)    {{ $wb.Close($false) }}
+    if ($excel) {{ $excel.Quit() }}
+    [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null
+}}
+"""
+    # Write to a temp file that won't be garbage-collected until we delete it
+    tmp = tempfile.NamedTemporaryFile(
+        mode="w", suffix=".ps1", delete=False, encoding="utf-8"
+    )
+    tmp.write(script_body)
+    tmp.flush()
+    tmp.close()
+    return tmp.name
+
+
+def _build_vba_command(ps1_path: str) -> list:
+    """Return the command list to execute a .ps1 file via PowerShell."""
+    ps_exe = _find_powershell()
+    return [
+        ps_exe,
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy", "Bypass",
+        "-File", ps1_path,
+    ]
+
+
+def _build_command(routine: Routine, variables: dict) -> tuple:
+    """
+    Build the shell command list from a routine definition.
+
+    Returns (cmd_list, tmp_ps1_path_or_None).
+    The caller must delete tmp_ps1_path after the process finishes.
+    """
     rtype = routine.type.lower()
     cmd = substitute_variables(routine.command, variables)
-    params = substitute_variables(routine.parameters, variables)
+    params = substitute_variables(routine.parameters or "", variables)
+    tmp_ps1 = None
 
     if rtype == "python":
         base = ["python", cmd]
+        if params:
+            base.extend(params.split())
+
     elif rtype == "shell":
-        base = ["bash", cmd] if not cmd.endswith(".bat") else [cmd]
-    elif rtype in ("excel", "vba"):
-        # Open with default handler or via script
-        base = ["start", "", cmd] if os.name == "nt" else ["open", cmd]
+        if cmd.endswith(".bat") or cmd.endswith(".cmd"):
+            base = [cmd]
+        else:
+            base = ["bash", cmd]
+        if params:
+            base.extend(params.split())
+
+    elif rtype in ("vba", "excel"):
+        # cmd    = path to the .xlsm / .xlsb / .xlsx file (local or UNC)
+        # params = macro name for vba; empty for plain excel refresh
+        macro = params if rtype == "vba" else ""
+        if os.name == "nt":
+            tmp_ps1 = _write_vba_ps1(cmd, macro)
+            base = _build_vba_command(tmp_ps1)
+        else:
+            # Non-Windows fallback: LibreOffice headless
+            macro_name = (params.strip() or "Main") if rtype == "vba" else "Main"
+            base = [
+                "libreoffice", "--headless", "--norestore",
+                f"macro:///Standard.Module1.{macro_name}",
+                cmd,
+            ]
+
     elif rtype == "api":
-        # Treat command as a URL, call via curl
         base = ["curl", "-s", cmd]
+        if params:
+            base.extend(params.split())
+
     else:
         base = [cmd]
+        if params:
+            base.extend(params.split())
 
-    if params:
-        base.extend(params.split())
-
-    return base
+    return base, tmp_ps1
 
 
 def _run_routine_thread(routine: Routine, run_id: str, variables: dict,
@@ -133,8 +270,14 @@ def _run_routine_thread(routine: Routine, run_id: str, variables: dict,
         if attempts > 1:
             _notify(routine_id, "running", f"↺ Tentativa {attempts}/{max_attempts}", run_id)
 
+        tmp_ps1 = None
         try:
-            cmd = _build_command(routine, variables)
+            cmd, tmp_ps1 = _build_command(routine, variables)
+
+            # Log the effective command so the user can diagnose issues
+            _notify(routine_id, "running",
+                    f"  cmd: {' '.join(str(c) for c in cmd[:4])} …", run_id)
+
             proc = subprocess.Popen(
                 cmd,
                 stdout=subprocess.PIPE,
@@ -142,6 +285,7 @@ def _run_routine_thread(routine: Routine, run_id: str, variables: dict,
                 cwd=work_dir,
                 text=True,
                 bufsize=1,
+                # On Windows, shell=False + full exe path is more reliable for COM/VBA
             )
             _running_processes[routine_id] = proc
 
@@ -169,14 +313,28 @@ def _run_routine_thread(routine: Routine, run_id: str, variables: dict,
             _notify(routine_id, "failed",
                     f"⏱ Timeout após {routine.timeout}s: {routine.name}", run_id)
 
-        except FileNotFoundError:
-            cmd_str = substitute_variables(routine.command, variables)
+        except FileNotFoundError as e:
+            # Show the actual executable that was not found, not just routine.command
+            exe = str(e).split("'")[1] if "'" in str(e) else str(e)
             _notify(routine_id, "failed",
-                    f"✗ Comando não encontrado: '{cmd_str}' — verifique o caminho e o tipo.", run_id)
-            break  # No point retrying a missing file
+                    f"✗ Executável não encontrado: '{exe}'. "
+                    f"Verifique se o programa está instalado e no PATH do sistema.", run_id)
+            if routine.type.lower() in ("vba", "excel"):
+                _notify(routine_id, "failed",
+                        "  → Para VBA/Excel: PowerShell deve estar disponível. "
+                        "Verifique C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\", run_id)
+            break  # No point retrying a missing executable
 
         except Exception as e:
             _notify(routine_id, "failed", f"✗ Exceção: {str(e)}", run_id)
+
+        finally:
+            # Always clean up temp .ps1 file
+            if tmp_ps1 and os.path.exists(tmp_ps1):
+                try:
+                    os.unlink(tmp_ps1)
+                except OSError:
+                    pass
 
     if final_status == "failed":
         _notify(routine_id, "failed",

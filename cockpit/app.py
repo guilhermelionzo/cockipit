@@ -691,11 +691,41 @@ def page_routines():
         with st.form("new_sub_form", clear_on_submit=True):
             c1, c2 = st.columns(2)
             with c1:
-                s_name    = st.text_input("Nome *",        placeholder="ex: Export PnL")
-                s_type    = st.selectbox("Tipo *",         [t for t in ROUTINE_TYPES if t != "group"])
-                s_command = st.text_input("Comando *",     placeholder="ex: export_pnl.py")
-                s_params  = st.text_input("Parâmetros",    placeholder="ex: --date {Data_Ref}")
-                s_workdir = st.text_input("Working Dir",   placeholder="ex: {Path_Base}\\scripts")
+                s_name = st.text_input("Nome *", placeholder="ex: Export PnL")
+                s_type = st.selectbox("Tipo *",  [t for t in ROUTINE_TYPES if t != "group"])
+
+                # Dynamic hints depending on selected type
+                _cmd_hints = {
+                    "python": ("Comando *", "ex: export_pnl.py ou C:\\scripts\\pnl.py",
+                               "Arquivo .py a executar. Pode usar variáveis: {Path_Base}\\script.py"),
+                    "vba":    ("Arquivo Excel *", "ex: C:\\Finance\\relatorio.xlsm",
+                               "Caminho completo para o arquivo .xlsm/.xlsb. Em Parâmetros coloque o nome da macro."),
+                    "excel":  ("Arquivo Excel *", "ex: C:\\Finance\\report.xlsx",
+                               "Caminho completo para o arquivo Excel. Será aberto, atualizado e salvo automaticamente."),
+                    "shell":  ("Comando *", "ex: update_data.bat",
+                               "Arquivo .bat, .cmd ou script shell a executar."),
+                    "api":    ("URL *", "ex: https://api.exemplo.com/refresh",
+                               "URL da API. Será chamada via curl -s."),
+                }
+                _ph = _cmd_hints.get(s_type, ("Comando *", "ex: comando", ""))
+                s_command = st.text_input(_ph[0], placeholder=_ph[1], help=_ph[2])
+
+                _param_hints = {
+                    "python": ("Parâmetros",   "ex: --date {Data_Ref} --fund {Fund_Name}",
+                               "Argumentos passados ao script Python."),
+                    "vba":    ("Nome da Macro","ex: Module1.ExportPnL  ou  ExportPnL",
+                               "Nome exato da macro VBA a executar. Use 'Modulo.NomeMacro' se necessário. Deixe vazio para apenas abrir/salvar/fechar."),
+                    "excel":  ("Parâmetros",   "",
+                               "Não utilizado para tipo Excel puro — deixe vazio."),
+                    "shell":  ("Parâmetros",   "ex: --env prod",
+                               "Argumentos passados ao script shell."),
+                    "api":    ("Parâmetros",   "ex: -H 'Authorization: Bearer {API_TOKEN}'",
+                               "Flags extras passadas ao curl."),
+                }
+                _pp = _param_hints.get(s_type, ("Parâmetros", "", ""))
+                s_params  = st.text_input(_pp[0], placeholder=_pp[1], help=_pp[2])
+                s_workdir = st.text_input("Working Dir", placeholder="ex: {Path_Base}\\scripts",
+                                          help="Diretório de trabalho. Deixe vazio para usar o diretório do Cockpit.")
             with c2:
                 s_desc    = st.text_area("Descrição", height=70)
                 p_names   = ["(sem pai — rotina independente)"] + [r.name for r in groups]
@@ -728,6 +758,29 @@ def page_routines():
                 s_cond = "always"
                 if s_parent != "(sem pai — rotina independente)":
                     st.info("Este grupo ainda não tem outras sub-rotinas. Dependências poderão ser adicionadas depois.")
+
+            # VBA-specific guidance block (always visible when type == vba)
+            if s_type == "vba":
+                st.markdown("""
+                <div style='background:#1a2a1a;border:1px solid #34d399;border-radius:8px;
+                            padding:0.75rem 1rem;margin-top:0.5rem;font-size:0.85rem;'>
+                    <div style='color:#34d399;font-weight:700;margin-bottom:6px;'>📘 Como configurar uma Macro VBA</div>
+                    <table style='color:#d1fae5;border-collapse:collapse;width:100%;'>
+                        <tr><td style='padding:2px 8px 2px 0;color:#6ee7b7;font-weight:600;'>Arquivo Excel</td>
+                            <td>Caminho completo do <code>.xlsm</code> ou <code>.xlsb</code><br>
+                                Ex: <code>C:\\Finance\\relatorio.xlsm</code></td></tr>
+                        <tr><td style='padding:2px 8px 2px 0;color:#6ee7b7;font-weight:600;'>Nome da Macro</td>
+                            <td>Nome exato da Sub VBA a executar<br>
+                                Ex: <code>ExportPnL</code> &nbsp;ou&nbsp; <code>Module1.ExportPnL</code><br>
+                                Deixe vazio para apenas abrir → salvar → fechar (atualiza conexões).</td></tr>
+                        <tr><td style='padding:2px 8px 2px 0;color:#6ee7b7;font-weight:600;'>Timeout</td>
+                            <td>Defina pelo menos 120s para arquivos grandes</td></tr>
+                    </table>
+                    <div style='color:#9ca3af;margin-top:6px;'>
+                        ⚙️ A execução usa <b>PowerShell + COM (Excel.Application)</b> — requer Excel instalado na máquina.
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
 
             if st.form_submit_button("⚙️ Criar Sub-rotina", use_container_width=True, type="primary"):
                 if not s_name or not s_command:
