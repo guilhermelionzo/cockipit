@@ -51,6 +51,7 @@ class Routine:
     command: str = ""
     working_dir: str = ""
     parameters: str = ""
+    cell_values: str = ""   # VBA/Excel only — "Sheet1!A1={Data_Ref}\nB2=texto"
     enabled: bool = True
     timeout: int = 300
     retry: int = 0
@@ -72,6 +73,7 @@ class Routine:
             "command": self.command,
             "working_dir": self.working_dir,
             "parameters": self.parameters,
+            "cell_values": self.cell_values,
             "enabled": self.enabled,
             "timeout": self.timeout,
             "retry": self.retry,
@@ -95,6 +97,7 @@ class Routine:
             command=d.get("command", ""),
             working_dir=d.get("working_dir", ""),
             parameters=d.get("parameters", ""),
+            cell_values=d.get("cell_values", ""),
             enabled=d.get("enabled", True),
             timeout=d.get("timeout", 300),
             retry=d.get("retry", 0),

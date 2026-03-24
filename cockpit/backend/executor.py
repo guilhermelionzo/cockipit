@@ -107,28 +107,120 @@ def substitute_variables(text: str, variables: Optional[dict] = None) -> str:
     return re.sub(r"\{(\w+)\}", replacer, text)
 
 
-def _write_vba_ps1(excel_path: str, macro_name: str) -> str:
+def _parse_cell_assignments(cell_values_str: str, variables: dict) -> list:
+    """
+    Parse a multiline cell-assignment block and return a list of dicts:
+        [{"sheet": "Sheet1", "cell": "A1", "value": "2026-03-24"}, ...]
+
+    Accepted formats (one per line, lines starting with # are comments):
+        A1=valor                      → active sheet, cell A1
+        Sheet1!A1=valor               → explicit sheet
+        Parametros!C5={Data_Ref}      → with variable substitution
+        B2=texto com espaços          → values may contain spaces
+    """
+    assignments = []
+    for raw_line in cell_values_str.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" not in line:
+            continue
+
+        lhs, _, rhs = line.partition("=")
+        lhs = lhs.strip()
+        value = substitute_variables(rhs.strip(), variables)
+
+        if "!" in lhs:
+            sheet, cell = lhs.split("!", 1)
+        else:
+            sheet = None
+            cell = lhs
+
+        assignments.append({"sheet": sheet, "cell": cell.strip(), "value": value})
+    return assignments
+
+
+def _render_cell_assignments_ps(assignments: list) -> str:
+    """
+    Render a list of cell assignments as PowerShell lines.
+    Each line sets $wb.Sheets["name"].Range("A1").Value = "..."
+    or $wb.ActiveSheet.Range("A1").Value = "..."
+    """
+    lines = []
+    for a in assignments:
+        cell  = a["cell"].replace('"', '`"')
+        value = a["value"].replace('"', '`"')
+        if a["sheet"]:
+            sheet = a["sheet"].replace('"', '`"')
+            lines.append(
+                f'    Write-Output "  Celula: [{sheet}!{cell}] = {value}"\n'
+                f'    $wb.Sheets["{sheet}"].Range("{cell}").Value = "{value}"'
+            )
+        else:
+            lines.append(
+                f'    Write-Output "  Celula: [{cell}] = {value}"\n'
+                f'    $wb.ActiveSheet.Range("{cell}").Value = "{value}"'
+            )
+    return "\n".join(lines)
+
+
+def _write_vba_ps1(excel_path: str, macro_name: str, cell_values_str: str = "",
+                   variables: Optional[dict] = None) -> str:
     """
     Write a PowerShell script to a temp .ps1 file and return its path.
 
     Using a .ps1 file (instead of inline -Command) avoids:
-      - Quoting/escaping issues with backslashes in UNC paths (\\server\\share\\file.xlsb)
+      - Quoting/escaping issues with backslashes in UNC paths (\\\\server\\share\\file.xlsb)
       - Command-line length limits
       - Single-quote conflicts inside the inline -Command string
 
-    excel_path  – full UNC or local path to the .xlsm / .xlsb / .xls file
-    macro_name  – exact VBA Sub name (e.g. 'Module1.ExportPnL').
-                  Leave blank to only open → RefreshAll → save → close.
+    excel_path      – full UNC or local path to the .xlsm / .xlsb file
+    macro_name      – exact VBA Sub name ('Module1.ExportPnL'). Leave blank to
+                      only open → set cells → RefreshAll → save → close.
+    cell_values_str – multiline string of cell assignments (Sheet1!A1={Var}).
+    variables       – cockpit variables dict for substitution.
     """
-    # Use raw string representation so backslashes survive the write to disk
-    safe_path = excel_path.replace('"', '`"')   # escape any literal " in the path
+    safe_path = excel_path.replace('"', '`"')
+
+    # Build cell-injection block
+    assignments = _parse_cell_assignments(cell_values_str or "", variables or {})
+    cell_block = ""
+    if assignments:
+        rendered = _render_cell_assignments_ps(assignments)
+        cell_block = (
+            f'    Write-Output "Injetando {len(assignments)} valor(es) nas celulas..."\n'
+            f'{rendered}\n'
+        )
+
+    # Bloco PowerShell compartilhado: obtém instância Excel já aberta (com add-ins)
+    # ou cria uma nova e carrega os add-ins manualmente.
+    excel_init = """\
+# Tenta reutilizar instância Excel já aberta (add-ins já carregados)
+try {
+    $excel = [System.Runtime.InteropServices.Marshal]::GetActiveObject("Excel.Application")
+    Write-Output "Usando instancia Excel existente (add-ins ja carregados)."
+} catch {
+    Write-Output "Criando nova instancia Excel..."
+    $excel = New-Object -ComObject Excel.Application
+    # Permitir macros e add-ins sem prompt de segurança
+    $excel.AutomationSecurity = 1  # msoAutomationSecurityLow
+    # Carregar add-ins instalados
+    $loaded = 0
+    foreach ($addin in $excel.AddIns) {
+        if ($addin.Installed) {
+            try { $addin.Installed = $true; $loaded++ } catch {}
+        }
+    }
+    Write-Output "Add-ins carregados: $loaded"
+}
+$excel.Visible = $true
+$excel.DisplayAlerts = $false
+"""
 
     if macro_name.strip():
         script_body = f"""\
 $ErrorActionPreference = 'Stop'
-$excel = New-Object -ComObject Excel.Application
-$excel.Visible = $false
-$excel.DisplayAlerts = $false
+{excel_init}
 try {{
     Write-Output "Abrindo: {safe_path}"
     $wb = $excel.Workbooks.Open("{safe_path}")
@@ -148,9 +240,7 @@ try {{
     else:
         script_body = f"""\
 $ErrorActionPreference = 'Stop'
-$excel = New-Object -ComObject Excel.Application
-$excel.Visible = $false
-$excel.DisplayAlerts = $false
+{excel_init}
 try {{
     Write-Output "Abrindo: {safe_path}"
     $wb = $excel.Workbooks.Open("{safe_path}")
@@ -168,7 +258,28 @@ try {{
     [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null
 }}
 """
-    # Write to a temp file that won't be garbage-collected until we delete it
+    tmp = tempfile.NamedTemporaryFile(
+        mode="w", suffix=".ps1", delete=False, encoding="utf-8"
+    )
+    tmp.write(script_body)
+    tmp.flush()
+    tmp.close()
+    return tmp.name
+
+
+def _write_open_ps1(excel_path: str) -> str:
+    """
+    Write a tiny PS1 that opens the Excel file with the default app (visibly).
+    The script exits immediately after handing the file to Windows Shell —
+    the routine is marked success and the user can edit the file freely.
+    """
+    safe_path = excel_path.replace('"', '`"')
+    script_body = f"""\
+$ErrorActionPreference = 'Stop'
+Write-Output "Abrindo arquivo: {safe_path}"
+Start-Process -FilePath "{safe_path}"
+Write-Output "Arquivo aberto com sucesso."
+"""
     tmp = tempfile.NamedTemporaryFile(
         mode="w", suffix=".ps1", delete=False, encoding="utf-8"
     )
@@ -215,16 +326,25 @@ def _build_command(routine: Routine, variables: dict) -> tuple:
         if params:
             base.extend(params.split())
 
-    elif rtype in ("vba", "excel"):
-        # cmd    = path to the .xlsm / .xlsb / .xlsx file (local or UNC)
-        # params = macro name for vba; empty for plain excel refresh
-        macro = params if rtype == "vba" else ""
+    elif rtype == "excel":
+        # Just open the file visibly with the default application (no automation).
+        # The routine completes as soon as the file is handed off to Excel.
+        # Use this step so the user can review/edit before a downstream VBA routine runs.
         if os.name == "nt":
-            tmp_ps1 = _write_vba_ps1(cmd, macro)
+            tmp_ps1 = _write_open_ps1(cmd)
             base = _build_vba_command(tmp_ps1)
         else:
-            # Non-Windows fallback: LibreOffice headless
-            macro_name = (params.strip() or "Main") if rtype == "vba" else "Main"
+            base = ["open", cmd]
+
+    elif rtype == "vba":
+        # Run a VBA macro inside the workbook (invisible Excel via COM).
+        # cmd    = path to the .xlsm / .xlsb file (local or UNC)
+        # params = macro name, e.g. 'Module1.ExportPnL'
+        if os.name == "nt":
+            tmp_ps1 = _write_vba_ps1(cmd, params)
+            base = _build_vba_command(tmp_ps1)
+        else:
+            macro_name = params.strip() or "Main"
             base = [
                 "libreoffice", "--headless", "--norestore",
                 f"macro:///Standard.Module1.{macro_name}",
