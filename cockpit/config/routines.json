@@ -1,0 +1,208 @@
+{
+  "routines": [
+    {
+      "id": "r_001",
+      "name": "Daily Finance Pipeline",
+      "description": "Pipeline completo de rotinas financeiras diárias",
+      "type": "group",
+      "command": "",
+      "working_dir": "",
+      "parameters": "",
+      "enabled": true,
+      "timeout": 3600,
+      "retry": 1,
+      "parent_id": null,
+      "order": 0,
+      "depends_on": [],
+      "run_condition": "always",
+      "tags": [
+        "daily",
+        "finance"
+      ],
+      "created_at": "2026-03-23T08:00:00",
+      "last_run": "2026-03-24T00:32:27.132546",
+      "last_status": "failed"
+    },
+    {
+      "id": "r_002",
+      "name": "Export PnL",
+      "description": "Exporta dados de P&L do sistema principal",
+      "type": "python",
+      "command": "export_pnl.py",
+      "working_dir": "{Path_Base}\\scripts",
+      "parameters": "--date {Data_Ref} --fund {Fund_Name}",
+      "enabled": true,
+      "timeout": 300,
+      "retry": 2,
+      "parent_id": "r_001",
+      "order": 3,
+      "depends_on": [],
+      "run_condition": "always",
+      "tags": [
+        "pnl",
+        "export"
+      ],
+      "created_at": "2026-03-23T08:00:00",
+      "last_run": "2026-03-24T00:38:45.314615",
+      "last_status": "pending"
+    },
+    {
+      "id": "r_003",
+      "name": "Update FX Rates",
+      "description": "Atualiza taxas de câmbio via API",
+      "type": "python",
+      "command": "update_fx.py",
+      "working_dir": "{Path_Base}\\scripts",
+      "parameters": "--date {Data_Ref}",
+      "enabled": true,
+      "timeout": 120,
+      "retry": 3,
+      "parent_id": "r_001",
+      "order": 2,
+      "depends_on": [
+        "r_002"
+      ],
+      "run_condition": "on_success",
+      "tags": [
+        "fx",
+        "api"
+      ],
+      "created_at": "2026-03-23T08:00:00",
+      "last_run": "2026-03-24T00:32:26.761024",
+      "last_status": "skipped"
+    },
+    {
+      "id": "r_004",
+      "name": "Generate Report Excel",
+      "description": "Gera relatório consolidado no Excel",
+      "type": "excel",
+      "command": "report_template.xlsx",
+      "working_dir": "{Path_Base}\\reports",
+      "parameters": "--date {Data_Ref}",
+      "enabled": true,
+      "timeout": 180,
+      "retry": 1,
+      "parent_id": "r_001",
+      "order": 1,
+      "depends_on": [
+        "r_003"
+      ],
+      "run_condition": "on_success",
+      "tags": [
+        "excel",
+        "report"
+      ],
+      "created_at": "2026-03-23T08:00:00",
+      "last_run": "2026-03-24T00:32:26.739469",
+      "last_status": "skipped"
+    },
+    {
+      "id": "r_005",
+      "name": "Send Email Report",
+      "description": "Envia relatório por e-mail para destinatários",
+      "type": "python",
+      "command": "send_email.py",
+      "working_dir": "{Path_Base}\\scripts",
+      "parameters": "--to {Email_Recipient} --date {Data_Ref}",
+      "enabled": true,
+      "timeout": 60,
+      "retry": 2,
+      "parent_id": "r_001",
+      "order": 4,
+      "depends_on": [
+        "r_004"
+      ],
+      "run_condition": "on_success",
+      "tags": [
+        "email",
+        "report"
+      ],
+      "created_at": "2026-03-23T08:00:00",
+      "last_run": "2026-03-24T00:32:27.092860",
+      "last_status": "skipped"
+    },
+    {
+      "id": "r_006",
+      "name": "Backup Database",
+      "description": "Faz backup do banco de dados financeiro",
+      "type": "shell",
+      "command": "backup_db.sh",
+      "working_dir": "{Path_Base}\\backup",
+      "parameters": "--date {Data_Ref}",
+      "enabled": true,
+      "timeout": 600,
+      "retry": 1,
+      "parent_id": null,
+      "order": 0,
+      "depends_on": [],
+      "run_condition": "always",
+      "tags": [
+        "backup",
+        "database"
+      ],
+      "created_at": "2026-03-23T08:00:00",
+      "last_run": null,
+      "last_status": "pending"
+    },
+    {
+      "id": "r_408c90",
+      "name": "Oi",
+      "description": "",
+      "type": "python",
+      "command": "python py",
+      "working_dir": "",
+      "parameters": "",
+      "enabled": true,
+      "timeout": 300,
+      "retry": 0,
+      "parent_id": null,
+      "order": 6,
+      "depends_on": [],
+      "run_condition": "on_success",
+      "tags": [],
+      "created_at": "2026-03-24T00:17:24.689902",
+      "last_run": null,
+      "last_status": "pending"
+    },
+    {
+      "id": "r_334082",
+      "name": "Teste",
+      "description": "",
+      "type": "group",
+      "command": "",
+      "working_dir": "",
+      "parameters": "",
+      "enabled": true,
+      "timeout": 3600,
+      "retry": 0,
+      "parent_id": null,
+      "order": 0,
+      "depends_on": [],
+      "run_condition": "always",
+      "tags": [],
+      "created_at": "2026-03-24T00:33:14.332422",
+      "last_run": "2026-03-24T00:42:13.861895",
+      "last_status": "success"
+    },
+    {
+      "id": "r_a873c2",
+      "name": "run py",
+      "description": "",
+      "type": "python",
+      "command": "C:\\Users\\guilh\\AppData\\Roaming\\MetaQuotes\\Terminal\\010E047102812FC0C18890992854220E\\MQL5\\Experts\\teste.py",
+      "working_dir": "",
+      "parameters": "",
+      "enabled": true,
+      "timeout": 300,
+      "retry": 0,
+      "parent_id": "r_334082",
+      "order": 0,
+      "depends_on": [],
+      "run_condition": "always",
+      "tags": [],
+      "created_at": "2026-03-24T00:34:26.299330",
+      "last_run": "2026-03-24T00:47:40.559077",
+      "last_status": "success"
+    }
+  ]
+}

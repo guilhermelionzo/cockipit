@@ -1,0 +1,580 @@
+{
+  "logs": [
+    {
+      "id": "log_0158b9",
+      "routine_id": "r_001",
+      "routine_name": "Daily Finance Pipeline",
+      "message": "▶ Iniciando grupo: Daily Finance Pipeline",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:26.707397",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_ec8846",
+      "routine_id": "r_004",
+      "routine_name": "Generate Report Excel",
+      "message": "⏭ Pulado: dependência 'r_003' não teve sucesso",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:26.727286",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_2f50b9",
+      "routine_id": "r_003",
+      "routine_name": "Update FX Rates",
+      "message": "⏭ Pulado: dependência 'r_002' não teve sucesso",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:26.752470",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_4f396c",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "▶ Iniciando: Export PnL",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:26.770832",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_3bd42f",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "  python: can't open file 'C:\\\\Users\\\\guilh\\\\source\\\\repos\\\\claude\\\\dashboard\\\\Cockpit\\\\cockpit\\\\export_pnl.py': [Errno 2] No such file or directory",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:26.835479",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_4b1c86",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "✗ Erro (código 2): Export PnL",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:32:26.853481",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_cb7528",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "↺ Tentativa 2/3",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:26.879497",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_bfe650",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "  python: can't open file 'C:\\\\Users\\\\guilh\\\\source\\\\repos\\\\claude\\\\dashboard\\\\Cockpit\\\\cockpit\\\\export_pnl.py': [Errno 2] No such file or directory",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:26.936014",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_55cc13",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "✗ Erro (código 2): Export PnL",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:32:26.954165",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_c78236",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "↺ Tentativa 3/3",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:26.972788",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_17e52a",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "  python: can't open file 'C:\\\\Users\\\\guilh\\\\source\\\\repos\\\\claude\\\\dashboard\\\\Cockpit\\\\cockpit\\\\export_pnl.py': [Errno 2] No such file or directory",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:27.019198",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_f9c688",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "✗ Erro (código 2): Export PnL",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:32:27.047940",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_1d0d37",
+      "routine_id": "r_002",
+      "routine_name": "Export PnL",
+      "message": "✗ Falhou após 3 tentativa(s): Export PnL",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:32:27.065401",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_5151a3",
+      "routine_id": "r_005",
+      "routine_name": "Send Email Report",
+      "message": "⏭ Pulado: dependência 'r_004' não teve sucesso",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:32:27.084768",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_fd0259",
+      "routine_id": "r_001",
+      "routine_name": "Daily Finance Pipeline",
+      "message": "✗ Grupo concluído: Daily Finance Pipeline",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:32:27.102862",
+      "run_id": "290c900f"
+    },
+    {
+      "id": "log_806be7",
+      "routine_id": "r_334082",
+      "routine_name": "Teste",
+      "message": "▶ Iniciando grupo: Teste",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:35:16.509712",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_d4d6ea",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "▶ Iniciando: Ping",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:35:16.527919",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_0e78a7",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  F\u0000a\u0000l\u0000h\u0000a\u0000 \u0000a\u0000o\u0000 \u0000a\u0000n\u0000e\u0000x\u0000a\u0000r\u0000 \u0000o\u0000 \u0000d\u0000i\u0000s\u0000c\u0000o\u0000 \u0000'\u0000C\u0000:\u0000\\\u0000U\u0000s\u0000e\u0000r\u0000s\u0000\\\u0000g\u0000u\u0000i\u0000l\u0000h\u0000\\\u0000A\u0000p\u0000p\u0000D\u0000a\u0000t\u0000a\u0000\\\u0000L\u0000o\u0000c\u0000a\u0000l\u0000\\\u0000P\u0000a\u0000c\u0000k\u0000a\u0000g\u0000e\u0000s\u0000\\\u0000C\u0000a\u0000n\u0000o\u0000n\u0000i\u0000c\u0000a\u0000l\u0000G\u0000r\u0000o\u0000u\u0000p\u0000L\u0000i\u0000m\u0000i\u0000t\u0000e\u0000d\u0000.\u0000U\u0000b\u0000u\u0000n\u0000t\u0000u\u0000_\u00007\u00009\u0000r\u0000h\u0000k\u0000p\u00001\u0000f\u0000n\u0000d\u0000g\u0000s\u0000c\u0000\\\u0000L\u0000o\u0000c\u0000a\u0000l\u0000S\u0000t\u0000a\u0000t\u0000e\u0000\\\u0000e\u0000x\u0000t\u00004\u0000.\u0000v\u0000h\u0000d\u0000x\u0000'\u0000 \u0000a\u0000o\u0000 \u0000W\u0000S\u0000L\u00002\u0000:\u0000 \u0000O\u0000 \u0000s\u0000i\u0000s\u0000t\u0000e\u0000m\u0000a\u0000 \u0000n\u0000ã\u0000o\u0000 \u0000p\u0000o\u0000d\u0000e\u0000 \u0000e\u0000n\u0000c\u0000o\u0000n\u0000t\u0000r\u0000a\u0000r\u0000 \u0000o\u0000 \u0000c\u0000a\u0000m\u0000i\u0000n\u0000h\u0000o\u0000 \u0000e\u0000s\u0000p\u0000e\u0000c\u0000i\u0000f\u0000i\u0000c\u0000a\u0000d\u0000o\u0000.\u0000 \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:35:19.415855",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_6da9a2",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:35:19.434709",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_54da08",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000C\u0000ó\u0000d\u0000i\u0000g\u0000o\u0000 \u0000d\u0000e\u0000 \u0000e\u0000r\u0000r\u0000o\u0000:\u0000 \u0000B\u0000a\u0000s\u0000h\u0000/\u0000S\u0000e\u0000r\u0000v\u0000i\u0000c\u0000e\u0000/\u0000C\u0000r\u0000e\u0000a\u0000t\u0000e\u0000I\u0000n\u0000s\u0000t\u0000a\u0000n\u0000c\u0000e\u0000/\u0000M\u0000o\u0000u\u0000n\u0000t\u0000D\u0000i\u0000s\u0000k\u0000/\u0000H\u0000C\u0000S\u0000/\u0000E\u0000R\u0000R\u0000O\u0000R\u0000_\u0000P\u0000A\u0000T\u0000H\u0000_\u0000N\u0000O\u0000T\u0000_\u0000F\u0000O\u0000U\u0000N\u0000D\u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:35:19.449508",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_99a1f1",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:35:19.466851",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_f58882",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:35:19.496338",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_fab8e0",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "✗ Erro (código 1): Ping",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:35:19.517344",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_df16b4",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "✗ Falhou após 1 tentativa(s): Ping",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:35:19.542806",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_53099e",
+      "routine_id": "r_334082",
+      "routine_name": "Teste",
+      "message": "✗ Grupo concluído: Teste",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:35:19.567439",
+      "run_id": "3cb7d36b"
+    },
+    {
+      "id": "log_975bad",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "▶ Iniciando: Ping",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:36:16.220131",
+      "run_id": "2c56ea6a"
+    },
+    {
+      "id": "log_f418c3",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  F\u0000a\u0000l\u0000h\u0000a\u0000 \u0000a\u0000o\u0000 \u0000a\u0000n\u0000e\u0000x\u0000a\u0000r\u0000 \u0000o\u0000 \u0000d\u0000i\u0000s\u0000c\u0000o\u0000 \u0000'\u0000C\u0000:\u0000\\\u0000U\u0000s\u0000e\u0000r\u0000s\u0000\\\u0000g\u0000u\u0000i\u0000l\u0000h\u0000\\\u0000A\u0000p\u0000p\u0000D\u0000a\u0000t\u0000a\u0000\\\u0000L\u0000o\u0000c\u0000a\u0000l\u0000\\\u0000P\u0000a\u0000c\u0000k\u0000a\u0000g\u0000e\u0000s\u0000\\\u0000C\u0000a\u0000n\u0000o\u0000n\u0000i\u0000c\u0000a\u0000l\u0000G\u0000r\u0000o\u0000u\u0000p\u0000L\u0000i\u0000m\u0000i\u0000t\u0000e\u0000d\u0000.\u0000U\u0000b\u0000u\u0000n\u0000t\u0000u\u0000_\u00007\u00009\u0000r\u0000h\u0000k\u0000p\u00001\u0000f\u0000n\u0000d\u0000g\u0000s\u0000c\u0000\\\u0000L\u0000o\u0000c\u0000a\u0000l\u0000S\u0000t\u0000a\u0000t\u0000e\u0000\\\u0000e\u0000x\u0000t\u00004\u0000.\u0000v\u0000h\u0000d\u0000x\u0000'\u0000 \u0000a\u0000o\u0000 \u0000W\u0000S\u0000L\u00002\u0000:\u0000 \u0000O\u0000 \u0000s\u0000i\u0000s\u0000t\u0000e\u0000m\u0000a\u0000 \u0000n\u0000ã\u0000o\u0000 \u0000p\u0000o\u0000d\u0000e\u0000 \u0000e\u0000n\u0000c\u0000o\u0000n\u0000t\u0000r\u0000a\u0000r\u0000 \u0000o\u0000 \u0000c\u0000a\u0000m\u0000i\u0000n\u0000h\u0000o\u0000 \u0000e\u0000s\u0000p\u0000e\u0000c\u0000i\u0000f\u0000i\u0000c\u0000a\u0000d\u0000o\u0000.\u0000 \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:36:16.330671",
+      "run_id": "2c56ea6a"
+    },
+    {
+      "id": "log_d1a1cf",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:36:16.356671",
+      "run_id": "2c56ea6a"
+    },
+    {
+      "id": "log_e3c3eb",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000C\u0000ó\u0000d\u0000i\u0000g\u0000o\u0000 \u0000d\u0000e\u0000 \u0000e\u0000r\u0000r\u0000o\u0000:\u0000 \u0000B\u0000a\u0000s\u0000h\u0000/\u0000S\u0000e\u0000r\u0000v\u0000i\u0000c\u0000e\u0000/\u0000C\u0000r\u0000e\u0000a\u0000t\u0000e\u0000I\u0000n\u0000s\u0000t\u0000a\u0000n\u0000c\u0000e\u0000/\u0000M\u0000o\u0000u\u0000n\u0000t\u0000D\u0000i\u0000s\u0000k\u0000/\u0000H\u0000C\u0000S\u0000/\u0000E\u0000R\u0000R\u0000O\u0000R\u0000_\u0000P\u0000A\u0000T\u0000H\u0000_\u0000N\u0000O\u0000T\u0000_\u0000F\u0000O\u0000U\u0000N\u0000D\u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:36:16.379068",
+      "run_id": "2c56ea6a"
+    },
+    {
+      "id": "log_95720e",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:36:16.400371",
+      "run_id": "2c56ea6a"
+    },
+    {
+      "id": "log_71d888",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:36:16.407233",
+      "run_id": "2c56ea6a"
+    },
+    {
+      "id": "log_8b24e2",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "✗ Erro (código 1): Ping",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:36:16.441937",
+      "run_id": "2c56ea6a"
+    },
+    {
+      "id": "log_d73429",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "✗ Falhou após 1 tentativa(s): Ping",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:36:16.470509",
+      "run_id": "2c56ea6a"
+    },
+    {
+      "id": "log_34eaee",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "▶ Iniciando: Ping",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:08.310692",
+      "run_id": "e01f11fd"
+    },
+    {
+      "id": "log_4d60d6",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  F\u0000a\u0000l\u0000h\u0000a\u0000 \u0000a\u0000o\u0000 \u0000a\u0000n\u0000e\u0000x\u0000a\u0000r\u0000 \u0000o\u0000 \u0000d\u0000i\u0000s\u0000c\u0000o\u0000 \u0000'\u0000C\u0000:\u0000\\\u0000U\u0000s\u0000e\u0000r\u0000s\u0000\\\u0000g\u0000u\u0000i\u0000l\u0000h\u0000\\\u0000A\u0000p\u0000p\u0000D\u0000a\u0000t\u0000a\u0000\\\u0000L\u0000o\u0000c\u0000a\u0000l\u0000\\\u0000P\u0000a\u0000c\u0000k\u0000a\u0000g\u0000e\u0000s\u0000\\\u0000C\u0000a\u0000n\u0000o\u0000n\u0000i\u0000c\u0000a\u0000l\u0000G\u0000r\u0000o\u0000u\u0000p\u0000L\u0000i\u0000m\u0000i\u0000t\u0000e\u0000d\u0000.\u0000U\u0000b\u0000u\u0000n\u0000t\u0000u\u0000_\u00007\u00009\u0000r\u0000h\u0000k\u0000p\u00001\u0000f\u0000n\u0000d\u0000g\u0000s\u0000c\u0000\\\u0000L\u0000o\u0000c\u0000a\u0000l\u0000S\u0000t\u0000a\u0000t\u0000e\u0000\\\u0000e\u0000x\u0000t\u00004\u0000.\u0000v\u0000h\u0000d\u0000x\u0000'\u0000 \u0000a\u0000o\u0000 \u0000W\u0000S\u0000L\u00002\u0000:\u0000 \u0000O\u0000 \u0000s\u0000i\u0000s\u0000t\u0000e\u0000m\u0000a\u0000 \u0000n\u0000ã\u0000o\u0000 \u0000p\u0000o\u0000d\u0000e\u0000 \u0000e\u0000n\u0000c\u0000o\u0000n\u0000t\u0000r\u0000a\u0000r\u0000 \u0000o\u0000 \u0000c\u0000a\u0000m\u0000i\u0000n\u0000h\u0000o\u0000 \u0000e\u0000s\u0000p\u0000e\u0000c\u0000i\u0000f\u0000i\u0000c\u0000a\u0000d\u0000o\u0000.\u0000 \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:10.010721",
+      "run_id": "e01f11fd"
+    },
+    {
+      "id": "log_627564",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:10.022721",
+      "run_id": "e01f11fd"
+    },
+    {
+      "id": "log_cf55b7",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000C\u0000ó\u0000d\u0000i\u0000g\u0000o\u0000 \u0000d\u0000e\u0000 \u0000e\u0000r\u0000r\u0000o\u0000:\u0000 \u0000B\u0000a\u0000s\u0000h\u0000/\u0000S\u0000e\u0000r\u0000v\u0000i\u0000c\u0000e\u0000/\u0000C\u0000r\u0000e\u0000a\u0000t\u0000e\u0000I\u0000n\u0000s\u0000t\u0000a\u0000n\u0000c\u0000e\u0000/\u0000M\u0000o\u0000u\u0000n\u0000t\u0000D\u0000i\u0000s\u0000k\u0000/\u0000H\u0000C\u0000S\u0000/\u0000E\u0000R\u0000R\u0000O\u0000R\u0000_\u0000P\u0000A\u0000T\u0000H\u0000_\u0000N\u0000O\u0000T\u0000_\u0000F\u0000O\u0000U\u0000N\u0000D\u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:10.050014",
+      "run_id": "e01f11fd"
+    },
+    {
+      "id": "log_f30571",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:10.079170",
+      "run_id": "e01f11fd"
+    },
+    {
+      "id": "log_6e2a2a",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:10.105174",
+      "run_id": "e01f11fd"
+    },
+    {
+      "id": "log_551e99",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "✗ Erro (código 1): Ping",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:39:10.130187",
+      "run_id": "e01f11fd"
+    },
+    {
+      "id": "log_c57f88",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "✗ Falhou após 1 tentativa(s): Ping",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:39:10.151292",
+      "run_id": "e01f11fd"
+    },
+    {
+      "id": "log_f0c39e",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "▶ Iniciando: Ping",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:55.363860",
+      "run_id": "7e0c32a5"
+    },
+    {
+      "id": "log_03ae7e",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  F\u0000a\u0000l\u0000h\u0000a\u0000 \u0000a\u0000o\u0000 \u0000a\u0000n\u0000e\u0000x\u0000a\u0000r\u0000 \u0000o\u0000 \u0000d\u0000i\u0000s\u0000c\u0000o\u0000 \u0000'\u0000C\u0000:\u0000\\\u0000U\u0000s\u0000e\u0000r\u0000s\u0000\\\u0000g\u0000u\u0000i\u0000l\u0000h\u0000\\\u0000A\u0000p\u0000p\u0000D\u0000a\u0000t\u0000a\u0000\\\u0000L\u0000o\u0000c\u0000a\u0000l\u0000\\\u0000P\u0000a\u0000c\u0000k\u0000a\u0000g\u0000e\u0000s\u0000\\\u0000C\u0000a\u0000n\u0000o\u0000n\u0000i\u0000c\u0000a\u0000l\u0000G\u0000r\u0000o\u0000u\u0000p\u0000L\u0000i\u0000m\u0000i\u0000t\u0000e\u0000d\u0000.\u0000U\u0000b\u0000u\u0000n\u0000t\u0000u\u0000_\u00007\u00009\u0000r\u0000h\u0000k\u0000p\u00001\u0000f\u0000n\u0000d\u0000g\u0000s\u0000c\u0000\\\u0000L\u0000o\u0000c\u0000a\u0000l\u0000S\u0000t\u0000a\u0000t\u0000e\u0000\\\u0000e\u0000x\u0000t\u00004\u0000.\u0000v\u0000h\u0000d\u0000x\u0000'\u0000 \u0000a\u0000o\u0000 \u0000W\u0000S\u0000L\u00002\u0000:\u0000 \u0000O\u0000 \u0000s\u0000i\u0000s\u0000t\u0000e\u0000m\u0000a\u0000 \u0000n\u0000ã\u0000o\u0000 \u0000p\u0000o\u0000d\u0000e\u0000 \u0000e\u0000n\u0000c\u0000o\u0000n\u0000t\u0000r\u0000a\u0000r\u0000 \u0000o\u0000 \u0000c\u0000a\u0000m\u0000i\u0000n\u0000h\u0000o\u0000 \u0000e\u0000s\u0000p\u0000e\u0000c\u0000i\u0000f\u0000i\u0000c\u0000a\u0000d\u0000o\u0000.\u0000 \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:55.470397",
+      "run_id": "7e0c32a5"
+    },
+    {
+      "id": "log_5425c9",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:55.493874",
+      "run_id": "7e0c32a5"
+    },
+    {
+      "id": "log_f6036c",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000C\u0000ó\u0000d\u0000i\u0000g\u0000o\u0000 \u0000d\u0000e\u0000 \u0000e\u0000r\u0000r\u0000o\u0000:\u0000 \u0000B\u0000a\u0000s\u0000h\u0000/\u0000S\u0000e\u0000r\u0000v\u0000i\u0000c\u0000e\u0000/\u0000C\u0000r\u0000e\u0000a\u0000t\u0000e\u0000I\u0000n\u0000s\u0000t\u0000a\u0000n\u0000c\u0000e\u0000/\u0000M\u0000o\u0000u\u0000n\u0000t\u0000D\u0000i\u0000s\u0000k\u0000/\u0000H\u0000C\u0000S\u0000/\u0000E\u0000R\u0000R\u0000O\u0000R\u0000_\u0000P\u0000A\u0000T\u0000H\u0000_\u0000N\u0000O\u0000T\u0000_\u0000F\u0000O\u0000U\u0000N\u0000D\u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:55.523999",
+      "run_id": "7e0c32a5"
+    },
+    {
+      "id": "log_344daa",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:55.545979",
+      "run_id": "7e0c32a5"
+    },
+    {
+      "id": "log_c4e32d",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "  \u0000",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:39:55.566236",
+      "run_id": "7e0c32a5"
+    },
+    {
+      "id": "log_311e32",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "✗ Erro (código 1): Ping",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:39:55.586191",
+      "run_id": "7e0c32a5"
+    },
+    {
+      "id": "log_c92c1b",
+      "routine_id": "r_a873c2",
+      "routine_name": "Ping",
+      "message": "✗ Falhou após 1 tentativa(s): Ping",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:39:55.607318",
+      "run_id": "7e0c32a5"
+    },
+    {
+      "id": "log_6fd719",
+      "routine_id": "r_334082",
+      "routine_name": "Teste",
+      "message": "▶ Iniciando grupo: Teste",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:42:13.722229",
+      "run_id": "6b221835"
+    },
+    {
+      "id": "log_3cf1a1",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "▶ Iniciando: run py",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:42:13.741590",
+      "run_id": "6b221835"
+    },
+    {
+      "id": "log_231ccd",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "  oi",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:42:13.808725",
+      "run_id": "6b221835"
+    },
+    {
+      "id": "log_221453",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "✓ Concluído: run py",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:42:13.830278",
+      "run_id": "6b221835"
+    },
+    {
+      "id": "log_1fcd84",
+      "routine_id": "r_334082",
+      "routine_name": "Teste",
+      "message": "✓ Grupo concluído: Teste",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:42:13.851614",
+      "run_id": "6b221835"
+    },
+    {
+      "id": "log_c9e590",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "▶ Iniciando: run py",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:46:46.464236",
+      "run_id": "8a0e8cfa"
+    },
+    {
+      "id": "log_9794ea",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "    File \"C:\\Users\\guilh\\AppData\\Roaming\\MetaQuotes\\Terminal\\010E047102812FC0C18890992854220E\\MQL5\\Experts\\teste.py\", line 7",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:46:46.548618",
+      "run_id": "8a0e8cfa"
+    },
+    {
+      "id": "log_691114",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "      asxsxas    print(\"oi\")",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:46:46.562622",
+      "run_id": "8a0e8cfa"
+    },
+    {
+      "id": "log_141b8b",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "                 ^^^^^",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:46:46.583799",
+      "run_id": "8a0e8cfa"
+    },
+    {
+      "id": "log_d93f29",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "  SyntaxError: invalid syntax",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:46:46.606199",
+      "run_id": "8a0e8cfa"
+    },
+    {
+      "id": "log_fe925e",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "✗ Erro (código 1): run py",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:46:46.626899",
+      "run_id": "8a0e8cfa"
+    },
+    {
+      "id": "log_7039d2",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "✗ Falhou após 1 tentativa(s): run py",
+      "level": "ERROR",
+      "timestamp": "2026-03-24T00:46:46.650195",
+      "run_id": "8a0e8cfa"
+    },
+    {
+      "id": "log_45144c",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "▶ Iniciando: run py",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:47:40.459468",
+      "run_id": "4d16ec88"
+    },
+    {
+      "id": "log_eaecc2",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "  oi",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:47:40.523658",
+      "run_id": "4d16ec88"
+    },
+    {
+      "id": "log_01df63",
+      "routine_id": "r_a873c2",
+      "routine_name": "run py",
+      "message": "✓ Concluído: run py",
+      "level": "INFO",
+      "timestamp": "2026-03-24T00:47:40.545945",
+      "run_id": "4d16ec88"
+    }
+  ]
+}
