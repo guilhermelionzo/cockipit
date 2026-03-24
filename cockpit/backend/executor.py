@@ -7,6 +7,7 @@ import time
 import uuid
 import tempfile
 import shutil
+import shlex
 from datetime import datetime
 from typing import Optional, Dict, Callable, List
 from .models import Routine, LogEntry
@@ -97,13 +98,31 @@ def _notify(routine_id: str, status: str, message: str, run_id: str):
             pass
 
 
-def substitute_variables(text: str, variables: Optional[dict] = None) -> str:
-    """Replace {VAR_NAME} placeholders with variable values."""
+def substitute_variables(text: str, variables: Optional[dict] = None,
+                         quote_spaces: bool = False) -> str:
+    """
+    Replace {VAR_NAME} placeholders with variable values.
+
+    quote_spaces=True: if the substituted value contains spaces AND is not already
+    surrounded by quotes in the template, wrap it in double-quotes automatically.
+    Use this when the result will be passed through shlex.split() as shell args.
+    """
     if variables is None:
         variables = get_variables_dict()
+
     def replacer(match):
-        key = match.group(1)
-        return variables.get(key, match.group(0))
+        key   = match.group(1)
+        value = variables.get(key, match.group(0))
+        if quote_spaces and " " in value:
+            # Only add quotes if not already quoted in the template context
+            start = match.start()
+            end   = match.end()
+            before = text[start - 1] if start > 0 else ""
+            after  = text[end]       if end < len(text) else ""
+            if before not in ('"', "'") and after not in ('"', "'"):
+                value = f'"{value}"'
+        return value
+
     return re.sub(r"\{(\w+)\}", replacer, text)
 
 
@@ -310,13 +329,14 @@ def _build_command(routine: Routine, variables: dict) -> tuple:
     """
     rtype = routine.type.lower()
     cmd = substitute_variables(routine.command, variables)
-    params = substitute_variables(routine.parameters or "", variables)
+    # quote_spaces=True: variáveis com espaços ficam entre aspas antes do shlex.split()
+    params = substitute_variables(routine.parameters or "", variables, quote_spaces=True)
     tmp_ps1 = None
 
     if rtype == "python":
         base = ["python", cmd]
         if params:
-            base.extend(params.split())
+            base.extend(shlex.split(params, posix=False))
 
     elif rtype == "shell":
         if cmd.endswith(".bat") or cmd.endswith(".cmd"):
@@ -324,7 +344,7 @@ def _build_command(routine: Routine, variables: dict) -> tuple:
         else:
             base = ["bash", cmd]
         if params:
-            base.extend(params.split())
+            base.extend(shlex.split(params, posix=False))
 
     elif rtype == "excel":
         # Just open the file visibly with the default application (no automation).
@@ -354,12 +374,12 @@ def _build_command(routine: Routine, variables: dict) -> tuple:
     elif rtype == "api":
         base = ["curl", "-s", cmd]
         if params:
-            base.extend(params.split())
+            base.extend(shlex.split(params, posix=False))
 
     else:
         base = [cmd]
         if params:
-            base.extend(params.split())
+            base.extend(shlex.split(params, posix=False))
 
     return base, tmp_ps1
 
